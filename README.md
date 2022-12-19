@@ -4,7 +4,7 @@
 
 **Uses:** Terraform, Google Cloud.
 
-## Prototype: Deploy two separate labs using standard Terraform
+## Prototype 1: Deploy two separate labs using standard Terraform
 
 This runs the provisioner locally (i.e. not in a container) and uses the `simple-workshop` lab type. 
 
@@ -58,11 +58,11 @@ terraform destroy -var 'project_id=my-google-cloud-project' \
 > **Note**
 > Could we use [Terraform Workspaces][workspaces]? Perhaps. But workspaces need to acquire a **lock**, which could prevent multiple executions at the same time.
 
-## Prototype: Provision labs using a shell script or Python runner
+## Prototype 2: Provision labs using a shell script or Python runner
 
-Also in this repo is an example Dockerfile to build a containerised version of the provisioner, and a sample startup script, `provision.sh`.
+Also in this repo are another couple of prototypes, showing how the Terraform to provision a lab could be called from a shell script or Python app.
 
-### Shell script -> Terraform
+### 2a: Shell script -> Terraform
 
 This prototype uses a simple shell script, `provision.sh`, to call Terraform. The shell script takes two arguments - the lab type, and the lab ID.
 
@@ -74,13 +74,13 @@ podman build -t lab-provisioner -f Dockerfile.shellrunner .
 podman run -v your-google-access-key.json:/root/.config/gcloud/application_default_credentials.json:z localhost/lab-provisioner simple-workshop mylab123
 ```
 
-#### Google PubSub -> Python app -> Terraform
+### 2b: Google PubSub -> Python app -> Terraform
 
-A second prototype shows how to run Terraform from a Python app. 
+This second prototype shows how to run Terraform from a Python app. 
 
 This is a more complex example, but it shows how to use Python's `subprocess.Popen` to run Terraform. It also uses a Google PubSub subscription - allowing you to trigger the provisioning of a lab by putting a message onto a topic.
 
-To try it out, create a PubSub topic and subscription, build the container, and then put a message onto the topic:
+To try it out - create a PubSub topic and subscription, build the container, and then put a message onto the topic:
 
 ```shell
 export TOPIC_ID=self-service-lab-requests
