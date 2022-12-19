@@ -9,7 +9,7 @@ def synchronous_pull(project_id: str, subscription_id: str) -> None:
     subscriber = pubsub_v1.SubscriberClient()
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
-    bucket_name = "test-skillable-poc"
+    bucket_name = "my-labs-state-bucket"
 
 
     NUM_MESSAGES = 1
